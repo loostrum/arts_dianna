@@ -1,23 +1,18 @@
 #!/usr/bin/env python3
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.keras.models import load_model
 
 import dianna
 from dianna.visualization.image import plot_image
 from dianna.visualization.timeseries import plot_timeseries
 
-model = load_model('model/20190416freq_time.hdf5')
-
-
-def run_model(data):
-    # add extra "colour channels" axis at the end and run through model,
-    # output is [p_noise, p_frb]
-    return model.predict(data[..., None])
+from utils import run_model, load_train_data
 
 
 if __name__ == '__main__':
-    data_frb = np.load('data/processed/FRB211024.npy')
+    # data_frb = np.load('data/processed/FRB211024.npy')
+    # data_frb = load_train_data(33598)  # FRB plus a few RFI channels
+    data_frb = load_train_data(36918)  # narrow-bandwidth FRB plus a few RFI channels (but masked by median filter)
 
     # run image-based dianna for class FRB
     heatmaps = dianna.explain_timeseries(run_model, data_frb, method='RISE', labels=[0, 1],

@@ -19,7 +19,7 @@ def preprocess_data(data):
     # remove remainder from start/end to keep center the same
     start = remainder//2
     end = ntime_data - remainder//2
-    if (remainder%2 != 0):
+    if (remainder % 2 != 0):
         start += 1
     data = data[:, start:end]
     data = data.reshape(NFREQ, NTIME, -1).mean(axis=2)
