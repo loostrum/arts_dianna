@@ -21,27 +21,30 @@ if __name__ == '__main__':
     # select heatmap for class FRB
     heatmap = heatmaps[1]
 
-    first_step = 0
-    step_size = 4
+    navg = 4
     segments = []
-    for channel_number in range(first_step, heatmap.shape[0], step_size):
-        heatmap_channel = heatmap[channel_number, :]
+
+    assert heatmap.shape[0] % navg == 0
+    heatmap_ds = heatmap.reshape((heatmap.shape[0]//navg, navg, heatmap.shape[1])).mean(axis=1)
+    data_frb_ds = data_frb.reshape((heatmap.shape[0]//navg, navg, heatmap.shape[1])).mean(axis=1)
+
+    for channel_number, heatmap_channel in enumerate(heatmap_ds):
         for i in range(len(heatmap_channel) - 1):
             segments.append({
                 'index': i,
                 'start': i,
                 'stop': i + 1,
                 'weight': heatmap_channel[i],
-                'channel': channel_number // step_size})
+                'channel': channel_number})
 
     x_label = 'Time step'
-    df = 300. / heatmap.shape[0]
+    df = 300. / heatmap_ds.shape[0]
     flo = 1220 + .5*df
     y_label = []
-    for channel_number in range(first_step, heatmap.shape[0], step_size):
+    for channel_number in range(0, heatmap_ds.shape[0]):
         y_label.append(f'{flo+df*channel_number:.0f}')
 
-    plot_timeseries(range(len(heatmap_channel)), data_frb[first_step::step_size, :], segments,
+    plot_timeseries(range(heatmap.shape[1]), data_frb_ds, segments,
                     x_label=x_label, y_label=y_label, show_plot=False)
 
     fig = plt.gcf()
