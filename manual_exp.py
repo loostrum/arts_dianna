@@ -32,9 +32,9 @@ def create_masked_data_freq(data_frb, n):
 
 
 if __name__ == '__main__':
-    # data_frb = np.load('data/processed/FRB211024.npy')
+    data_frb = np.load('data/processed/FRB211024.npy')
     # data_frb = load_train_data(33598)  # FRB plus a few RFI channels
-    data_frb = load_train_data(36918)  # narrow-bandwidth FRB plus a few RFI channels (but masked by median filter)
+    # data_frb = load_train_data(36918)  # narrow-bandwidth FRB plus a few RFI channels (but masked by median filter)
 
     p_frb_original = run_model(data_frb[None, ...])[0, 1]
     print(f'{p_frb_original=:.2f}')
